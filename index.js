@@ -74,25 +74,25 @@ var BackgroundGeolocation = {
     errorFn = errorFn || emptyFn;
     RNBackgroundGeolocation.getLocations(successFn, errorFn);
   },
-/*
+
   getValidLocations: function(successFn, errorFn) {
     successFn = successFn || emptyFn;
     errorFn = errorFn || emptyFn;
     RNBackgroundGeolocation.getValidLocations(successFn, errorFn);
   },
-
+/*
   deleteLocation: function(locationId, successFn, errorFn) {
     successFn = successFn || emptyFn;
     errorFn = errorFn || emptyFn;
     RNBackgroundGeolocation.deleteLocation(locationId, successFn, errorFn);
   },
-
+*/
   deleteAllLocations: function(successFn, errorFn) {
     successFn = successFn || emptyFn;
     errorFn = errorFn || emptyFn;
     RNBackgroundGeolocation.deleteAllLocations(successFn, errorFn);
   },
-*/
+
   switchMode: function(modeId, successFn, errorFn) {
     successFn = successFn || emptyFn;
     errorFn = errorFn || emptyFn;
