@@ -361,6 +361,35 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
     }
 
     @ReactMethod
+    public void getValidLocations(Callback success, Callback error) {
+        WritableArray locationsArray = Arguments.createArray();
+        LocationDAO dao = DAOFactory.createLocationDAO(getContext());
+        try {
+            Collection<BackgroundLocation> locations = dao.getValidLocations();
+            for (BackgroundLocation location : locations) {
+                WritableMap out = Arguments.createMap();
+                Long locationId = location.getLocationId();
+                Integer locationProvider = location.getLocationProvider();
+                if (locationId != null) out.putInt("locationId", Convert.safeLongToInt(locationId));
+                if (locationProvider != null) out.putInt("locationProvider", locationProvider);
+                out.putDouble("time", new Long(location.getTime()).doubleValue());
+                out.putDouble("latitude", location.getLatitude());
+                out.putDouble("longitude", location.getLongitude());
+                out.putDouble("accuracy", location.getAccuracy());
+                out.putDouble("speed", location.getSpeed());
+                out.putDouble("altitude", location.getAltitude());
+                out.putDouble("bearing", location.getBearing());
+
+                locationsArray.pushMap(out);
+            }
+            success.invoke(locationsArray);
+        } catch (Exception e) {
+            log.error("Getting all locations failed: {}", e.getMessage());
+            error.invoke("Converting locations to JSON failed.");
+        }
+    }
+
+    @ReactMethod
     public void deleteAllLocations(Callback success, Callback error) {
         LocationDAO dao = DAOFactory.createLocationDAO(getContext());
         try {
