@@ -365,7 +365,7 @@ public class BackgroundGeolocationModule extends ReactContextBaseJavaModule impl
         LocationDAO dao = DAOFactory.createLocationDAO(getContext());
         try {
             dao.deleteAllLocations();
-            success.invoke(locationsArray);
+            success.invoke("Successfully deleted all locations");
         } catch (Exception e) {
             log.error("Deleting all locations failed: {}", e.getMessage());
             error.invoke("Deleting all locations failed.");
