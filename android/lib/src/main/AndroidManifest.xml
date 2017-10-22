@@ -32,6 +32,15 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.marianhello.bgloc.LocationServiceRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped">
+            <intent-filter>
+                <action android:name="com.marianhello.bgloc.LocationService.RestartService"/>
+            </intent-filter>
+        </receiver>
     </application>
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />

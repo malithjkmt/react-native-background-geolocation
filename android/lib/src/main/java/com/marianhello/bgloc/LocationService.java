@@ -42,6 +42,8 @@ import com.marianhello.bgloc.sync.AccountHelper;
 import com.marianhello.bgloc.sync.AuthenticatorService;
 import com.marianhello.bgloc.sync.SyncService;
 import com.marianhello.logging.LoggerManager;
+import com.marianhello.bgloc.LocationServiceRestarterBroadcastReceiver;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +54,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class LocationService extends Service {
+    private LocationServiceRestarterBroadcastReceiver locationServiceRestarterBroadcastReceiver;
 
     /** Keeps track of all current registered clients. */
     HashMap<Integer, Messenger> mClients = new HashMap();
@@ -178,18 +181,33 @@ public class LocationService extends Service {
         syncAccount = AccountHelper.CreateSyncAccount(this,
                 AuthenticatorService.getAccount(getStringResource(Config.ACCOUNT_TYPE_RESOURCE)));
 
+        locationServiceRestarterBroadcastReceiver = new LocationServiceRestarterBroadcastReceiver();
+
+        registerReceiver(locationServiceRestarterBroadcastReceiver, new IntentFilter("com.marianhello.bgloc.LocationServiceRestarterBroadcastReceiver"));
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
     public void onDestroy() {
-        log.info("Destroying LocationService");
         provider.onDestroy();
+        log.info("Destroying LocationService");
+        
+        // If it's still recording while destroying, roadcast to restarted again
+        if(provider.isRecording()){
+            log.info("Location Service is still recording, so sending broadcast to restart the service");
+            Intent broadcastIntent = new Intent("com.marianhello.bgloc.LocationServiceRestarterBroadcastReceiver");
+            sendBroadcast(broadcastIntent);
+        } else{
+            log.info("Location Service is NOT recording, so unregistering broadcast receiver");
+            unregisterReceiver(locationServiceRestarterBroadcastReceiver);
+        }
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             handlerThread.quitSafely();
         } else {
             handlerThread.quit(); //sorry
         }
+
         unregisterReceiver(connectivityChangeReceiver);
         super.onDestroy();
     }

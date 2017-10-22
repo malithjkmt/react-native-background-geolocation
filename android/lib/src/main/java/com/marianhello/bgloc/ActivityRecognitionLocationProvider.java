@@ -46,6 +46,7 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
     private DetectedActivity lastActivity = new DetectedActivity(DetectedActivity.UNKNOWN, 100);
 
     private org.slf4j.Logger log;
+    private Boolean isRecording = false;
 
     public ActivityRecognitionLocationProvider(LocationService locationService) {
         super(locationService);
@@ -119,15 +120,21 @@ public class ActivityRecognitionLocationProvider extends AbstractLocationProvide
         };
     }
 
+    public Boolean isRecording(){
+        return this.isRecording;
+    }
+
     public void startRecording() {
         log.debug("Start recording");
         this.startRecordingOnConnect = true;
+        this.isRecording = true;
         attachRecorder();
     }
 
     public void stopRecording() {
         log.info("Stop recording");
         this.startRecordingOnConnect = false;
+        this.isRecording = false;
         detachRecorder();
         stopTracking();
     }

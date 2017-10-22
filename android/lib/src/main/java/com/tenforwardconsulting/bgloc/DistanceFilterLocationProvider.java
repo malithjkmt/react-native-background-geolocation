@@ -52,6 +52,7 @@ public class DistanceFilterLocationProvider extends AbstractLocationProvider imp
     private static final Integer MAX_STATIONARY_ACQUISITION_ATTEMPTS = 5;
     private static final Integer MAX_SPEED_ACQUISITION_ATTEMPTS = 3;
 
+    private Boolean isRecording = false;
     private Boolean isMoving = false;
     private Boolean isAcquiringStationaryLocation = false;
     private Boolean isAcquiringSpeed = false;
@@ -119,14 +120,20 @@ public class DistanceFilterLocationProvider extends AbstractLocationProvider imp
         criteria.setCostAllowed(true);
     }
 
+    public Boolean isRecording() {
+        return this.isRecording;
+    }
+
     public void startRecording() {
         log.info("Start recording");
         scaledDistanceFilter = config.getDistanceFilter();
         setPace(false);
+        this.isRecording = true;
     }
 
     public void stopRecording() {
         log.info("stopRecording not implemented yet");
+        this.isRecording = false;
     }
 
     /**

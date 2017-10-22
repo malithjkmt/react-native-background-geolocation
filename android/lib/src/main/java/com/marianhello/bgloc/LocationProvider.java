@@ -20,4 +20,5 @@ public interface LocationProvider {
     void onDestroy();
     void startRecording();
     void stopRecording();
+    Boolean isRecording();
 }
